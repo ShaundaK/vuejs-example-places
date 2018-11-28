@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    <div v-for="place in places">
+    Search by name: <input v-model="nameFilter">
+    <div v-for="place in filterBy(places, nameFilter, 'name')">
       <h3>{{ place.name }}</h3>
       <h4>{{ place.address }}</h4>
     </div>
@@ -13,11 +14,14 @@
 
 <script>
   var axios = require('axios');
-export default {
+  import Vue2Filters from 'vue2-filters'
+ export default {
+  mixins: [Vue2Filters.mixin], 
   data: function() {
     return {
-      message: "Welcome to Vue.js!",
-      places: []
+      message: "Places",
+      places: [],
+      nameFilter: ''
     };
   },
   created: function() {
@@ -28,7 +32,19 @@ export default {
       this.places = response.data;
     }.bind(this))
   },
-  methods: {},
+  methods: {
+    addPlace: function() {
+      var params = {
+        name: this.NewPlace.name,
+        address: this.NewPlace.address
+      }
+      axios.get("http://localhost:3000/api/places", params).then(function(response) {
+        console.log("response.data");
+        this.places.push(response.data);
+      }.bind(this))
+    }
+  },
+  
   computed: {}
 };
 </script>
