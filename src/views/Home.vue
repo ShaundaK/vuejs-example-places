@@ -1,7 +1,15 @@
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    Search by name: <input v-model="nameFilter">
+    Search by name: <input v-model="nameFilter" list ="places">
+    <!-- Search by bio: <input v-model="nameFilter" list="bios"> -->
+    <datalist id="places">
+      <span v-for="place in places">
+        <option>{{place.name}}</option>
+        <option>{{place.address}}</option>
+      </span>
+    </datalist>
+
     <div v-for="place in filterBy(places, nameFilter, 'name')">
       <h3>{{ place.name }}</h3>
       <h4>{{ place.address }}</h4>
