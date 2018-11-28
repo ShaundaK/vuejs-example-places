@@ -1,16 +1,17 @@
 <template>
   <div class="home">
     <h1>{{ message }}</h1>
-    Search by name: <input v-model="nameFilter" list ="places">
-    <!-- Search by bio: <input v-model="nameFilter" list="bios"> -->
+    Search by name or bio: <input v-model="nameFilter" list ="places">
     <datalist id="places">
       <span v-for="place in places">
         <option>{{place.name}}</option>
         <option>{{place.address}}</option>
       </span>
     </datalist>
+    <button @click="setSortAttribute('name')">Sort by name</button>
+    <button @click="setSortAttribute('address')">Sort by address</button>
 
-    <div v-for="place in filterBy(places, nameFilter, 'name')">
+    <div v-for="place in orderBy(filterBy(places, nameFilter, 'name', 'address'), sortAttribute)">
       <h3>{{ place.name }}</h3>
       <h4>{{ place.address }}</h4>
     </div>
@@ -29,7 +30,8 @@
     return {
       message: "Places",
       places: [],
-      nameFilter: ''
+      nameFilter: '',
+      sortAttribute: 'name'
     };
   },
   created: function() {
@@ -50,8 +52,11 @@
         console.log("response.data");
         this.places.push(response.data);
       }.bind(this))
-    }
-  },
+    },
+  setSortAttribute: function(inputAttribute) {
+    this.sortAttribute = inputAttribute;
+   },
+ },
   
   computed: {}
 };
